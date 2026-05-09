@@ -159,7 +159,9 @@ These are mostly internal — you generally don't need to read or override them,
 
 ## Styling
 
-The component intentionally ships mostly unstyled — it only sets the inline styles required for the 3D math. You're expected to style the slots and flaps yourself with regular CSS. Here's a starter stylesheet that gives you a classic black-and-white airport board look:
+The component intentionally ships mostly unstyled — it only sets the inline styles required for the 3D math. You're expected to style the slots and flaps yourself with regular CSS. Here's a starter stylesheet that gives you an airport board look:
+
+Note: you will likely want to set `perspective: 550px;` (or any other value) and `transform-style: preserve-3d;` on the root `<div>
 
 ```css
 .split_flap_display {
