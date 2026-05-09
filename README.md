@@ -163,7 +163,7 @@ The component intentionally ships mostly unstyled — it only sets the inline st
 
 ```css
 .split_flap_display {
-  --ease-out-cubic: cubic-bezier(.215, .61, .355, 1);
+  --ease-out-cubic: cubic-bezier(0.215, 0.61, 0.355, 1);
   display: flex;
   font-size: 3.5em;
   gap: 2px; /* gap between characters */
@@ -185,8 +185,9 @@ The component intentionally ships mostly unstyled — it only sets the inline st
     > [data-split-flap-flap] {
       background: var(--color-background);
       border-radius: 3px;
-      box-shadow: inset 0 0 2px 0.75px var(--color-border-2),
-      inset 0 0 0 1px var(--color-border-1);
+      box-shadow:
+        inset 0 0 2px 0.75px var(--color-border-2),
+        inset 0 0 0 1px var(--color-border-1);
       box-sizing: content-box;
       height: 0.5em;
       line-height: 1;
@@ -207,7 +208,6 @@ The component intentionally ships mostly unstyled — it only sets the inline st
   }
 }
 ```
-
 
 ## Examples
 

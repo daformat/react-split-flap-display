@@ -161,7 +161,7 @@ describe("SplitFlapDisplay", () => {
         "800ms",
       );
       expect(root.style.getPropertyValue("--split-flap-timing-function")).toBe(
-        "cubic-bezier(.550, .055, .675, .19)",
+        "cubic-bezier(.215, .61, .355, 1)",
       );
     });
 
