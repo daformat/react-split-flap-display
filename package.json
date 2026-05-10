@@ -1,6 +1,6 @@
 {
   "name": "@daformat/react-split-flap-display",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "license": "Zero-Clause BSD",
   "description": "A react split flap display component, with no dependencies",
   "keywords": [

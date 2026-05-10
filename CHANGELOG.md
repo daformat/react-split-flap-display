@@ -1,5 +1,11 @@
 # @daformat/react-split-flap-display
 
+## 1.0.2
+
+### Patch Changes
+
+- b1aa444: (feat): Enable composition API, enabling easier tailwind usage
+
 ## 1.0.1
 
 ### Patch Changes
