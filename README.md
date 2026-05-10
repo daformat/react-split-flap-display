@@ -166,10 +166,14 @@ Note: you will likely want to set `perspective: 550px;` (or any other value) and
 ```css
 .split_flap_display {
   --ease-out-cubic: cubic-bezier(0.215, 0.61, 0.355, 1);
+  --color-background: #feefe7;
+  --color-border-1: rgba(255, 255, 255, 0.6);
+  --color-border-2: rgba(255, 255, 255, 0.001);
+
   display: flex;
+  filter: drop-shadow(0 1px 12px var(--color-shadow-1));
   font-size: 3.5em;
   gap: 2px; /* gap between characters */
-  transition: transform 500ms var(--ease-out-cubic);
 
   [data-split-flap-character] {
     /* prevent elements from showing through the crease */
@@ -177,6 +181,7 @@ Note: you will likely want to set `perspective: 550px;` (or any other value) and
       background-color: var(--color-background);
       content: "";
       display: block;
+      /* this variable is set by the component */
       height: var(--split-flap-crease);
       position: absolute;
       top: 50%;

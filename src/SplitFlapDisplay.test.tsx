@@ -295,5 +295,106 @@ describe("SplitFlapDisplay", () => {
 
       expect(getActiveChar(getSlots(container)[0]!)).toBe("C");
     });
+
+    it("calls onFullyFlipped at most once per value change", async () => {
+      const flushAsyncCallbacks = () =>
+        act(async () => {
+          await new Promise((resolve) => setTimeout(resolve, 0));
+          await new Promise((resolve) =>
+            requestAnimationFrame(() => resolve(undefined)),
+          );
+        });
+
+      const onFullyFlipped = vi.fn();
+      const { rerender } = render(
+        <SplitFlapDisplay
+          value="HI"
+          length={2}
+          characters={ALPHA}
+          onFullyFlipped={onFullyFlipped}
+        />,
+      );
+      await flushAsyncCallbacks();
+      expect(onFullyFlipped).toHaveBeenCalledTimes(1);
+
+      // Re-rendering with the same value should not produce extra calls,
+      // even though children still ping the parent on every render.
+      for (let i = 0; i < 3; i++) {
+        rerender(
+          <SplitFlapDisplay
+            value="HI"
+            length={2}
+            characters={ALPHA}
+            onFullyFlipped={onFullyFlipped}
+          />,
+        );
+        await flushAsyncCallbacks();
+      }
+      expect(onFullyFlipped).toHaveBeenCalledTimes(1);
+    });
+
+    it("fires onFullyFlipped again the next time the value changes", async () => {
+      const onFullyFlipped = vi.fn();
+      const { rerender } = render(
+        <SplitFlapDisplay
+          value="A"
+          length={1}
+          characters="ABC"
+          onFullyFlipped={onFullyFlipped}
+        />,
+      );
+      await act(async () => {
+        for (let i = 0; i < 5; i++) {
+          await new Promise((resolve) => setTimeout(resolve, 200));
+        }
+      });
+      const callsAfterMount = onFullyFlipped.mock.calls.length;
+
+      rerender(
+        <SplitFlapDisplay
+          value="C"
+          length={1}
+          characters="ABC"
+          onFullyFlipped={onFullyFlipped}
+        />,
+      );
+      await act(async () => {
+        for (let i = 0; i < 5; i++) {
+          await new Promise((resolve) => setTimeout(resolve, 200));
+        }
+      });
+
+      expect(onFullyFlipped.mock.calls.length).toBeGreaterThan(callsAfterMount);
+    });
+
+    it("does not invalidate handleFullyFlipped when only the onFullyFlipped prop identity changes", () => {
+      // If handleFullyFlipped's identity is unstable, the child animation
+      // effect (which has it in its dep array) would re-run on every parent
+      // render, restarting the flip from scratch. We assert that the slot's
+      // animation state survives a parent re-render with a fresh callback.
+      const { container, rerender } = render(
+        <SplitFlapDisplay
+          value="A"
+          length={1}
+          characters="ABC"
+          onFullyFlipped={() => {}}
+        />,
+      );
+      const slot = getSlots(container)[0]!;
+      expect(getActiveChar(slot)).toBe("A");
+
+      rerender(
+        <SplitFlapDisplay
+          value="A"
+          length={1}
+          characters="ABC"
+          onFullyFlipped={() => {}}
+        />,
+      );
+
+      // Same DOM node, still showing "A" — no remount/restart triggered.
+      expect(getSlots(container)[0]).toBe(slot);
+      expect(getActiveChar(slot)).toBe("A");
+    });
   });
 });

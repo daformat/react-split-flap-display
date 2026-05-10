@@ -46,19 +46,24 @@ export const SplitFlapDisplay = memo(
       const displayValue = (
         isOverflowing ? value.slice(0, length - 1) + "…" : value
       ).padEnd(length, " ");
-      const fullyFlippedRef = useRef(0);
-      const lastValueRef = useRef("");
-      const unchangedCount = displayValue
-        .split("")
-        // eslint-disable-next-line react-hooks/refs
-        .reduce((unchanged, char, index) => {
-          return lastValueRef.current?.[index] === char
-            ? unchanged + 1
-            : unchanged;
-        }, 0);
 
-      // eslint-disable-next-line react-hooks/refs
-      fullyFlippedRef.current = unchangedCount;
+      // Stabilize callback identity
+      const onFullyFlippedRef = useRef(onFullyFlipped);
+      useLayoutEffect(() => {
+        onFullyFlippedRef.current = onFullyFlipped;
+      }, [onFullyFlipped]);
+
+      // Track which slots have reported "settled" since the current
+      // displayValue was committed. A Set dedupes naturally, so it doesn't
+      // matter if a slot reports more than once (mount path, unchanged path,
+      // animation-complete path, Strict Mode double effects...).
+      const settledSlotsRef = useRef<Set<number>>(new Set());
+      const firedForRef = useRef<string | null>(null);
+
+      useLayoutEffect(() => {
+        settledSlotsRef.current = new Set();
+        firedForRef.current = null;
+      }, [displayValue, length]);
 
       const validateCharacters = () => {
         const chars = characters instanceof Array ? characters : [characters];
@@ -93,24 +98,18 @@ export const SplitFlapDisplay = memo(
       };
       validateCharacters();
 
-      useLayoutEffect(() => {
-        if (fullyFlippedRef.current === length) {
-          onFullyFlipped?.();
-        }
-      });
-
-      useLayoutEffect(() => {
-        lastValueRef.current = displayValue;
-      }, [displayValue]);
-
       const handleFullyFlipped = useCallback(
-        (_char: string, _index: number) => {
-          fullyFlippedRef.current++;
-          if (fullyFlippedRef.current === length) {
-            onFullyFlipped?.();
+        (_char: string, index: number) => {
+          if (firedForRef.current === displayValue) {
+            return;
+          }
+          settledSlotsRef.current.add(index);
+          if (settledSlotsRef.current.size === length) {
+            firedForRef.current = displayValue;
+            onFullyFlippedRef.current?.();
           }
         },
-        [length, onFullyFlipped],
+        [displayValue, length],
       );
 
       return (
