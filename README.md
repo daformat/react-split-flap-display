@@ -134,29 +134,29 @@ When you don't pass a `children` render-prop to a given level, that level render
 
 The outermost wrapper. Owns the value, the length, the character set, and the flip timing. Renders a `<div>` and accepts every standard `<div>` prop.
 
-| Prop                 | Type                                            | Default                                 | Description                                                                                                                                                                                                                                                                                  |
-| -------------------- | ----------------------------------------------- | --------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `value`              | `string`                                        | —                                       | The current value to display. Every character must belong to the corresponding character set, otherwise the component throws. Pad with spaces if `value.length < length` and remember to include `" "` in `characters`.                                                                      |
-| `length`             | `number`                                        | —                                       | The number of slots to render. Values shorter than `length` are right-padded with spaces; values longer than `length` are truncated and the last slot becomes an ellipsis (`…`).                                                                                                             |
-| `characters`         | `string \| string[]`                            | —                                       | The set of characters each slot can flip through. Pass a single string to share the same set across every slot, or an array of length `length` to give each slot its own set. Each set must be non-empty and contain no duplicates.                                                          |
-| `onFullyFlipped`     | `() => void`                                    | —                                       | Fires exactly once after every slot has finished flipping to the current `value`. Fires again on the next value change. Useful for chaining transitions or syncing audio.                                                                                                                    |
-| `crease`             | `number \| string`                              | `1`                                     | Visual gap between the top and bottom flaps. A `number` is interpreted as pixels; a `string` is passed through verbatim (e.g. `"0.5rem"`). Exposed to CSS as `--split-flap-crease`.                                                                                                          |
-| `flipDuration`       | `number \| string`                              | `800`                                   | Duration of the flip animation. A `number` is interpreted as milliseconds; a `string` is passed through verbatim (e.g. `"1s"`). Exposed to CSS as `--split-flap-flip-duration`.                                                                                                              |
-| `flipTimingFunction` | `string`                                        | `"cubic-bezier(.215, .61, .355, 1)"`    | CSS timing function for the flip animation. Exposed to CSS as `--split-flap-timing-function`.                                                                                                                                                                                                |
-| `children`           | render-prop, see below                          | —                                       | _Optional._ Take over slot rendering. When omitted, `Root` renders one `<SplitFlapDisplay.Slot>` per character of the (post-padding/truncation) display value.                                                                                                                               |
-| `style`              | `CSSProperties`                                 | —                                       | Merged with the component's own inline style. The component's CSS variables are applied last and will win over the same custom properties supplied via `style`.                                                                                                                              |
-| `ref`                | `Ref<HTMLDivElement>`                           | —                                       | Forwarded to the root `<div>`.                                                                                                                                                                                                                                                               |
-| `...props`           | `Omit<ComponentPropsWithoutRef<"div">, "children">` | —                                       | Any other standard `<div>` prop (`className`, `id`, `aria-*`, `data-*`, …).                                                                                                                                                                                                                  |
+| Prop                 | Type                                                | Default                              | Description                                                                                                                                                                                                                         |
+| -------------------- | --------------------------------------------------- | ------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `value`              | `string`                                            | —                                    | The current value to display. Every character must belong to the corresponding character set, otherwise the component throws. Pad with spaces if `value.length < length` and remember to include `" "` in `characters`.             |
+| `length`             | `number`                                            | —                                    | The number of slots to render. Values shorter than `length` are right-padded with spaces; values longer than `length` are truncated and the last slot becomes an ellipsis (`…`).                                                    |
+| `characters`         | `string \| string[]`                                | —                                    | The set of characters each slot can flip through. Pass a single string to share the same set across every slot, or an array of length `length` to give each slot its own set. Each set must be non-empty and contain no duplicates. |
+| `onFullyFlipped`     | `() => void`                                        | —                                    | Fires exactly once after every slot has finished flipping to the current `value`. Fires again on the next value change. Useful for chaining transitions or syncing audio.                                                           |
+| `crease`             | `number \| string`                                  | `1`                                  | Visual gap between the top and bottom flaps. A `number` is interpreted as pixels; a `string` is passed through verbatim (e.g. `"0.5rem"`). Exposed to CSS as `--split-flap-crease`.                                                 |
+| `flipDuration`       | `number \| string`                                  | `800`                                | Duration of the flip animation. A `number` is interpreted as milliseconds; a `string` is passed through verbatim (e.g. `"1s"`). Exposed to CSS as `--split-flap-flip-duration`.                                                     |
+| `flipTimingFunction` | `string`                                            | `"cubic-bezier(.215, .61, .355, 1)"` | CSS timing function for the flip animation. Exposed to CSS as `--split-flap-timing-function`.                                                                                                                                       |
+| `children`           | render-prop, see below                              | —                                    | _Optional._ Take over slot rendering. When omitted, `Root` renders one `<SplitFlapDisplay.Slot>` per character of the (post-padding/truncation) display value.                                                                      |
+| `style`              | `CSSProperties`                                     | —                                    | Merged with the component's own inline style. The component's CSS variables are applied last and will win over the same custom properties supplied via `style`.                                                                     |
+| `ref`                | `Ref<HTMLDivElement>`                               | —                                    | Forwarded to the root `<div>`.                                                                                                                                                                                                      |
+| `...props`           | `Omit<ComponentPropsWithoutRef<"div">, "children">` | —                                    | Any other standard `<div>` prop (`className`, `id`, `aria-*`, `data-*`, …).                                                                                                                                                         |
 
 ### `Root` `children` render-prop signature
 
 ```ts
 (
-  index: number,             // 0-based slot index
-  characters: string,        // character set for this slot (with the ellipsis appended on the last slot when overflowing)
-  currentCharacter: string,  // the character this slot should currently be showing
+  index: number, // 0-based slot index
+  characters: string, // character set for this slot (with the ellipsis appended on the last slot when overflowing)
+  currentCharacter: string, // the character this slot should currently be showing
   onFullyFlipped: (character: string, index: number) => void, // pass this through to your <Slot>
-) => ReactNode
+) => ReactNode;
 ```
 
 Capture `currentCharacter` from this closure if you need to forward it deeper (it isn't re-emitted by `Slot.children`).
@@ -167,16 +167,16 @@ Capture `currentCharacter` from this closure if you need to forward it deeper (i
 
 A single slot in the display: renders one `<span data-split-flap-slot="">` containing every possible character in the slot's character set, only one of which is "current" at a time. Forwards every standard `<span>` prop to the root span.
 
-| Prop               | Type                                                 | Description                                                                                                                                                                                       |
-| ------------------ | ---------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `index`            | `number`                                             | The slot's position in the display. Used as the slot's identity by the `onFullyFlipped` bookkeeping in `Root`.                                                                                    |
-| `characters`       | `string`                                             | The character set this slot can flip through. Must be non-empty, no duplicates, and must contain `currentCharacter`.                                                                              |
-| `currentCharacter` | `string`                                             | The character this slot should currently be showing. Changing this triggers the flip animation through every character in between.                                                                |
-| `onFullyFlipped`   | `(character: string, index: number) => void`         | _Optional._ Called after this slot has settled on `currentCharacter`. When you compose under `Root`, just pass through the `onFullyFlipped` you receive from `Root`'s render-prop.               |
-| `children`         | `(character: string, index: number) => ReactNode`    | _Optional._ Take over character rendering. Called once per character in the set. When omitted, `Slot` renders one `<SplitFlapDisplay.Character>` per character.                                  |
-| `style`            | `CSSProperties`                                      | Merged with the component's own inline style.                                                                                                                                                     |
-| `ref`              | `Ref<HTMLSpanElement>`                               | Forwarded to the slot `<span>`.                                                                                                                                                                   |
-| `...props`         | `Omit<ComponentPropsWithoutRef<"span">, "children">` | Any other standard `<span>` prop.                                                                                                                                                                 |
+| Prop               | Type                                                 | Description                                                                                                                                                                        |
+| ------------------ | ---------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `index`            | `number`                                             | The slot's position in the display. Used as the slot's identity by the `onFullyFlipped` bookkeeping in `Root`.                                                                     |
+| `characters`       | `string`                                             | The character set this slot can flip through. Must be non-empty, no duplicates, and must contain `currentCharacter`.                                                               |
+| `currentCharacter` | `string`                                             | The character this slot should currently be showing. Changing this triggers the flip animation through every character in between.                                                 |
+| `onFullyFlipped`   | `(character: string, index: number) => void`         | _Optional._ Called after this slot has settled on `currentCharacter`. When you compose under `Root`, just pass through the `onFullyFlipped` you receive from `Root`'s render-prop. |
+| `children`         | `(character: string, index: number) => ReactNode`    | _Optional._ Take over character rendering. Called once per character in the set. When omitted, `Slot` renders one `<SplitFlapDisplay.Character>` per character.                    |
+| `style`            | `CSSProperties`                                      | Merged with the component's own inline style.                                                                                                                                      |
+| `ref`              | `Ref<HTMLSpanElement>`                               | Forwarded to the slot `<span>`.                                                                                                                                                    |
+| `...props`         | `Omit<ComponentPropsWithoutRef<"span">, "children">` | Any other standard `<span>` prop.                                                                                                                                                  |
 
 `Slot` owns the slot-level CSS variables (`--split-flap-current-character-index`, `--split-flap-total`, `--split-flap-turn`) and is the element you'll most often style with a `className`.
 
@@ -186,15 +186,15 @@ A single slot in the display: renders one `<span data-split-flap-slot="">` conta
 
 One possible character within a slot: renders one `<span data-split-flap-character="" data-char="X">` containing the two rotating flaps. Every character in the set is rendered, the non-current ones are positioned in 3D space behind/ahead of the current one. Forwards every standard `<span>` prop.
 
-| Prop               | Type                                                 | Description                                                                                                                                                                                                                                                  |
-| ------------------ | ---------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `index`            | `number`                                             | The character's position within the slot's character set.                                                                                                                                                                                                    |
-| `character`        | `string`                                             | The character this `Character` represents (a single grapheme).                                                                                                                                                                                               |
-| `currentCharacter` | `string`                                             | The character the slot is currently showing. Used to compute whether this `Character` is the active one. The active character has its `inert` attribute removed; all others get `inert={true}`.                                                              |
-| `children`         | `(character: string) => ReactNode`                   | _Optional._ Take over flap rendering. Receives `character`, returns the two flaps (and any extra layers, like a crease overlay). When omitted, `Character` renders `<Flap position="top">` then `<Flap position="bottom">`.                                  |
-| `style`            | `CSSProperties`                                      | Merged with the component's own inline style.                                                                                                                                                                                                                |
-| `ref`              | `Ref<HTMLSpanElement>`                               | Forwarded to the character `<span>`.                                                                                                                                                                                                                         |
-| `...props`         | `Omit<ComponentPropsWithoutRef<"span">, "children">` | Any other standard `<span>` prop.                                                                                                                                                                                                                            |
+| Prop               | Type                                                 | Description                                                                                                                                                                                                                 |
+| ------------------ | ---------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `index`            | `number`                                             | The character's position within the slot's character set.                                                                                                                                                                   |
+| `character`        | `string`                                             | The character this `Character` represents (a single grapheme).                                                                                                                                                              |
+| `currentCharacter` | `string`                                             | The character the slot is currently showing. Used to compute whether this `Character` is the active one. The active character has its `inert` attribute removed; all others get `inert={true}`.                             |
+| `children`         | `(character: string) => ReactNode`                   | _Optional._ Take over flap rendering. Receives `character`, returns the two flaps (and any extra layers, like a crease overlay). When omitted, `Character` renders `<Flap position="top">` then `<Flap position="bottom">`. |
+| `style`            | `CSSProperties`                                      | Merged with the component's own inline style.                                                                                                                                                                               |
+| `ref`              | `Ref<HTMLSpanElement>`                               | Forwarded to the character `<span>`.                                                                                                                                                                                        |
+| `...props`         | `Omit<ComponentPropsWithoutRef<"span">, "children">` | Any other standard `<span>` prop.                                                                                                                                                                                           |
 
 `Character` owns the math-heavy per-flap CSS variables (`--split-flap-offset`, `--split-flap-direction`, `--split-flap-top-flap-angle`, `--split-flap-bottom-flap-angle`, …) — see [CSS custom properties](#css-custom-properties).
 
@@ -204,13 +204,13 @@ One possible character within a slot: renders one `<span data-split-flap-charact
 
 A single half of a flap pair: renders one `<span data-split-flap-flap="top|bottom">` that rotates around its top or bottom edge. Forwards every standard `<span>` prop.
 
-| Prop        | Type                              | Description                                                                                                                                  |
-| ----------- | --------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| `character` | `string`                          | The character this flap displays.                                                                                                            |
-| `position`  | `"top" \| "bottom"`               | Which half of the flap pair this is. The `bottom` flap is automatically `aria-hidden` and `inert` — it's a visual mirror of the top flap.    |
-| `style`     | `CSSProperties`                   | Merged with the component's own inline style.                                                                                                |
-| `ref`       | `Ref<HTMLSpanElement>`            | Forwarded to the flap `<span>`.                                                                                                              |
-| `...props`  | `ComponentPropsWithoutRef<"span">`| Any other standard `<span>` prop (`className`, etc.).                                                                                        |
+| Prop        | Type                               | Description                                                                                                                               |
+| ----------- | ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `character` | `string`                           | The character this flap displays.                                                                                                         |
+| `position`  | `"top" \| "bottom"`                | Which half of the flap pair this is. The `bottom` flap is automatically `aria-hidden` and `inert` — it's a visual mirror of the top flap. |
+| `style`     | `CSSProperties`                    | Merged with the component's own inline style.                                                                                             |
+| `ref`       | `Ref<HTMLSpanElement>`             | Forwarded to the flap `<span>`.                                                                                                           |
+| `...props`  | `ComponentPropsWithoutRef<"span">` | Any other standard `<span>` prop (`className`, etc.).                                                                                     |
 
 ---
 
@@ -333,13 +333,13 @@ The component renders a fairly minimal DOM tree. The data attributes are stable 
 </div>
 ```
 
-| Attribute                       | Where          | Description                                                                                                                                                                                |
-| ------------------------------- | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `data-split-flap-slot=""`       | Each `Slot`    | Marks one of the `length` slots that make up the display.                                                                                                                                  |
-| `data-split-flap-character=""`  | Each `Character` | Marks one possible character within a slot. The currently visible character is the one whose index matches `--split-flap-current-character-index` on its parent slot.                    |
-| `data-char="X"`                 | Each `Character` | The character this `Character` represents.                                                                                                                                                 |
-| `data-split-flap-flap="top"`    | Top `Flap`     | The half that rotates from `0deg` down to `-90deg` while flipping.                                                                                                                         |
-| `data-split-flap-flap="bottom"` | Bottom `Flap`  | The half that rotates from `90deg` up to `0deg` while flipping. Always `inert` and `aria-hidden`.                                                                                          |
+| Attribute                       | Where            | Description                                                                                                                                                           |
+| ------------------------------- | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `data-split-flap-slot=""`       | Each `Slot`      | Marks one of the `length` slots that make up the display.                                                                                                             |
+| `data-split-flap-character=""`  | Each `Character` | Marks one possible character within a slot. The currently visible character is the one whose index matches `--split-flap-current-character-index` on its parent slot. |
+| `data-char="X"`                 | Each `Character` | The character this `Character` represents.                                                                                                                            |
+| `data-split-flap-flap="top"`    | Top `Flap`       | The half that rotates from `0deg` down to `-90deg` while flipping.                                                                                                    |
+| `data-split-flap-flap="bottom"` | Bottom `Flap`    | The half that rotates from `90deg` up to `0deg` while flipping. Always `inert` and `aria-hidden`.                                                                     |
 
 ## CSS custom properties
 
@@ -504,10 +504,7 @@ import {
   type SplitFlapDisplayRootProps,
 } from "@daformat/react-split-flap-display";
 
-type ScoreBoardProps = Omit<
-  SplitFlapDisplayRootProps,
-  "characters" | "length"
->;
+type ScoreBoardProps = Omit<SplitFlapDisplayRootProps, "characters" | "length">;
 
 const ScoreBoard = (props: ScoreBoardProps) => (
   <SplitFlapDisplay.Root {...props} length={4} characters="0123456789 " />
