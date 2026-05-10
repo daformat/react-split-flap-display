@@ -7,6 +7,10 @@
 
 A zero-dependency React component that renders an animated [split-flap display](https://en.wikipedia.org/wiki/Split-flap_display) — like the ones you'd see in old train stations and airports. Each character flips through its character set with a 3D rotation driven entirely by CSS, and the component itself is minimally styled so you can theme the flaps however you want.
 
+## Demo
+
+https://hello-mat.com/design-engineering/component/split-flap-display
+
 ## Features
 
 - Zero runtime dependencies (just React `>= 18`)
@@ -39,10 +43,6 @@ bun add @daformat/react-split-flap-display
 ```bash
 deno add npm:@daformat/react-split-flap-display
 ```
-
-## Demo
-
-https://hello-mat.com/design-engineering/component/split-flap-display
 
 ## Quick start
 
