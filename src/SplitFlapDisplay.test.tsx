@@ -36,7 +36,7 @@ describe("SplitFlapDisplay", () => {
   describe("rendering", () => {
     it("renders one slot per `length` and exposes each character", () => {
       const { container } = render(
-        <SplitFlapDisplay value="HELLO" length={5} characters={ALPHA} />,
+        <SplitFlapDisplay.Root value="HELLO" length={5} characters={ALPHA} />,
       );
       const slots = getSlots(container);
       expect(slots).toHaveLength(5);
@@ -45,7 +45,7 @@ describe("SplitFlapDisplay", () => {
 
     it("pads the value with trailing spaces when shorter than `length`", () => {
       const { container } = render(
-        <SplitFlapDisplay value="HI" length={5} characters={ALPHA} />,
+        <SplitFlapDisplay.Root value="HI" length={5} characters={ALPHA} />,
       );
       expect(getSlots(container).map(getActiveChar)).toEqual([
         "H",
@@ -58,7 +58,11 @@ describe("SplitFlapDisplay", () => {
 
     it("truncates with an ellipsis when the value overflows `length`", () => {
       const { container } = render(
-        <SplitFlapDisplay value="HELLO WORLD" length={5} characters={ALPHA} />,
+        <SplitFlapDisplay.Root
+          value="HELLO WORLD"
+          length={5}
+          characters={ALPHA}
+        />,
       );
       const slots = getSlots(container);
       expect(slots.map(getActiveChar)).toEqual(["H", "E", "L", "L", "…"]);
@@ -71,7 +75,7 @@ describe("SplitFlapDisplay", () => {
     it("renders one flap per character of the character set per slot", () => {
       const characters = "AB ";
       const { container } = render(
-        <SplitFlapDisplay value="A" length={1} characters={characters} />,
+        <SplitFlapDisplay.Root value="A" length={1} characters={characters} />,
       );
       const slots = getSlots(container);
       expect(slots).toHaveLength(1);
@@ -81,7 +85,7 @@ describe("SplitFlapDisplay", () => {
     it("supports a per-slot character set when `characters` is an array", () => {
       const perSlot = ["AB", "12"];
       const { container } = render(
-        <SplitFlapDisplay value="A1" length={2} characters={perSlot} />,
+        <SplitFlapDisplay.Root value="A1" length={2} characters={perSlot} />,
       );
       const slots = getSlots(container);
       expect(getSlotChars(slots[0]!).map((n) => n.dataset.char)).toEqual([
@@ -97,7 +101,7 @@ describe("SplitFlapDisplay", () => {
 
     it("renders both a top and bottom flap for every character", () => {
       const { container } = render(
-        <SplitFlapDisplay value="A" length={1} characters="AB" />,
+        <SplitFlapDisplay.Root value="A" length={1} characters="AB" />,
       );
       const slot = getSlots(container)[0]!;
       const chars = getSlotChars(slot);
@@ -115,7 +119,7 @@ describe("SplitFlapDisplay", () => {
   describe("style props", () => {
     it("applies CSS variables for crease, flip duration and timing function", () => {
       const { container } = render(
-        <SplitFlapDisplay
+        <SplitFlapDisplay.Root
           value="A"
           length={1}
           characters="A"
@@ -136,7 +140,7 @@ describe("SplitFlapDisplay", () => {
 
     it("passes through string values for crease and flip duration verbatim", () => {
       const { container } = render(
-        <SplitFlapDisplay
+        <SplitFlapDisplay.Root
           value="A"
           length={1}
           characters="A"
@@ -153,7 +157,7 @@ describe("SplitFlapDisplay", () => {
 
     it("uses sensible defaults for crease, flip duration and timing function", () => {
       const { container } = render(
-        <SplitFlapDisplay value="A" length={1} characters="A" />,
+        <SplitFlapDisplay.Root value="A" length={1} characters="A" />,
       );
       const root = container.firstChild as HTMLElement;
       expect(root.style.getPropertyValue("--split-flap-crease")).toBe("1px");
@@ -167,7 +171,7 @@ describe("SplitFlapDisplay", () => {
 
     it("merges user-provided `style` with the component's own style", () => {
       const { container } = render(
-        <SplitFlapDisplay
+        <SplitFlapDisplay.Root
           value="A"
           length={1}
           characters="A"
@@ -184,7 +188,7 @@ describe("SplitFlapDisplay", () => {
   describe("forwarded props and ref", () => {
     it("forwards arbitrary props to the root <div>", () => {
       const { container } = render(
-        <SplitFlapDisplay
+        <SplitFlapDisplay.Root
           value="A"
           length={1}
           characters="A"
@@ -205,7 +209,7 @@ describe("SplitFlapDisplay", () => {
     it("forwards the ref to the root <div>", () => {
       const ref = createRef<HTMLDivElement>();
       render(
-        <SplitFlapDisplay ref={ref} value="A" length={1} characters="A" />,
+        <SplitFlapDisplay.Root ref={ref} value="A" length={1} characters="A" />,
       );
       expect(ref.current).toBeInstanceOf(HTMLDivElement);
     });
@@ -215,7 +219,7 @@ describe("SplitFlapDisplay", () => {
     it("throws when `characters` is an empty string", () => {
       const spy = vi.spyOn(console, "error").mockImplementation(() => {});
       expect(() =>
-        render(<SplitFlapDisplay value="" length={1} characters="" />),
+        render(<SplitFlapDisplay.Root value="" length={1} characters="" />),
       ).toThrow(/non empty string/);
       spy.mockRestore();
     });
@@ -224,7 +228,11 @@ describe("SplitFlapDisplay", () => {
       const spy = vi.spyOn(console, "error").mockImplementation(() => {});
       expect(() =>
         render(
-          <SplitFlapDisplay value="A " length={2} characters={["A", ""]} />,
+          <SplitFlapDisplay.Root
+            value="A "
+            length={2}
+            characters={["A", ""]}
+          />,
         ),
       ).toThrow(/non empty string/);
       spy.mockRestore();
@@ -233,7 +241,9 @@ describe("SplitFlapDisplay", () => {
     it("throws and reports the duplicates when a character set repeats characters", () => {
       const spy = vi.spyOn(console, "error").mockImplementation(() => {});
       expect(() =>
-        render(<SplitFlapDisplay value="A" length={1} characters="AABC" />),
+        render(
+          <SplitFlapDisplay.Root value="A" length={1} characters="AABC" />,
+        ),
       ).toThrow(/duplicate.*A/);
       spy.mockRestore();
     });
@@ -241,7 +251,7 @@ describe("SplitFlapDisplay", () => {
     it("throws when the value contains a character not in the character set", () => {
       const spy = vi.spyOn(console, "error").mockImplementation(() => {});
       expect(() =>
-        render(<SplitFlapDisplay value="Z" length={1} characters="AB" />),
+        render(<SplitFlapDisplay.Root value="Z" length={1} characters="AB" />),
       ).toThrow(/Character "Z" is not in character set "AB"/);
       spy.mockRestore();
     });
@@ -251,7 +261,7 @@ describe("SplitFlapDisplay", () => {
     it("invokes onFullyFlipped after the initial mount has settled", async () => {
       const onFullyFlipped = vi.fn();
       render(
-        <SplitFlapDisplay
+        <SplitFlapDisplay.Root
           value="HI"
           length={2}
           characters={ALPHA}
@@ -270,20 +280,22 @@ describe("SplitFlapDisplay", () => {
 
     it("re-renders to the same value without throwing", () => {
       const { rerender } = render(
-        <SplitFlapDisplay value="HI" length={2} characters={ALPHA} />,
+        <SplitFlapDisplay.Root value="HI" length={2} characters={ALPHA} />,
       );
       expect(() =>
-        rerender(<SplitFlapDisplay value="HI" length={2} characters={ALPHA} />),
+        rerender(
+          <SplitFlapDisplay.Root value="HI" length={2} characters={ALPHA} />,
+        ),
       ).not.toThrow();
     });
 
     it("eventually shows the new value after the value prop changes", async () => {
       const { container, rerender } = render(
-        <SplitFlapDisplay value="A" length={1} characters="ABC" />,
+        <SplitFlapDisplay.Root value="A" length={1} characters="ABC" />,
       );
       expect(getActiveChar(getSlots(container)[0]!)).toBe("A");
 
-      rerender(<SplitFlapDisplay value="C" length={1} characters="ABC" />);
+      rerender(<SplitFlapDisplay.Root value="C" length={1} characters="ABC" />);
 
       // The flip animation is driven by setTimeout/requestAnimationFrame, so
       // give those a chance to run before asserting on the final character.
@@ -307,7 +319,7 @@ describe("SplitFlapDisplay", () => {
 
       const onFullyFlipped = vi.fn();
       const { rerender } = render(
-        <SplitFlapDisplay
+        <SplitFlapDisplay.Root
           value="HI"
           length={2}
           characters={ALPHA}
@@ -321,7 +333,7 @@ describe("SplitFlapDisplay", () => {
       // even though children still ping the parent on every render.
       for (let i = 0; i < 3; i++) {
         rerender(
-          <SplitFlapDisplay
+          <SplitFlapDisplay.Root
             value="HI"
             length={2}
             characters={ALPHA}
@@ -336,7 +348,7 @@ describe("SplitFlapDisplay", () => {
     it("fires onFullyFlipped again the next time the value changes", async () => {
       const onFullyFlipped = vi.fn();
       const { rerender } = render(
-        <SplitFlapDisplay
+        <SplitFlapDisplay.Root
           value="A"
           length={1}
           characters="ABC"
@@ -351,7 +363,7 @@ describe("SplitFlapDisplay", () => {
       const callsAfterMount = onFullyFlipped.mock.calls.length;
 
       rerender(
-        <SplitFlapDisplay
+        <SplitFlapDisplay.Root
           value="C"
           length={1}
           characters="ABC"
@@ -373,7 +385,7 @@ describe("SplitFlapDisplay", () => {
       // render, restarting the flip from scratch. We assert that the slot's
       // animation state survives a parent re-render with a fresh callback.
       const { container, rerender } = render(
-        <SplitFlapDisplay
+        <SplitFlapDisplay.Root
           value="A"
           length={1}
           characters="ABC"
@@ -384,7 +396,7 @@ describe("SplitFlapDisplay", () => {
       expect(getActiveChar(slot)).toBe("A");
 
       rerender(
-        <SplitFlapDisplay
+        <SplitFlapDisplay.Root
           value="A"
           length={1}
           characters="ABC"
