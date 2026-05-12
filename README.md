@@ -5,7 +5,7 @@
 [![Follow daformat on GitHub](https://img.shields.io/github/followers/daformat?label=Follow%20%40daformat&style=social)](https://github.com/daformat)
 [![Follow daformat on X](https://img.shields.io/twitter/follow/daformat?label=Follow%20%40daformat&style=social)](https://twitter.com/daformat)
 
-A zero-dependency React compound component that renders an animated [split-flap display](https://en.wikipedia.org/wiki/Split-flap_display) — like the ones you'd see in old train stations and airports. Each character flips through its character set with a 3D rotation driven entirely by CSS, and every layer (root, slot, character, flap) is exposed so you can replace any of them with your own markup.
+A zero-dependency React compound component that renders an animated [split-flap display](https://en.wikipedia.org/wiki/Split-flap_display), aka Solari board — like the ones you'd see in old train stations and airports. Each character flips through its character set with a 3D rotation driven entirely by CSS, and every layer (root, slot, character, flap) is exposed so you can replace any of them with your own markup.
 
 ## Demo
 
